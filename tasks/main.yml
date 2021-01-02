@@ -1,9 +1,56 @@
-## Kubernetes role
 ---
 
-include: configureSystem.yml
-include: install.yml
-include: configure.yml
-include: init.yml
-include: start.yml
+- name: Install containerd.
+  yum:
+    name: https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.4.3-3.1.el8.x86_64.rpm
+    state: present
+    validate_certs: yes
 
+- name: Configure containerd.
+  file:
+    path: /etc/containerd
+    state: directory
+
+- name: Configure containerd.
+  shell: /usr/bin/containerd config default > /etc/containerd/config.toml
+
+- name: Enable containerd service, and start it.
+  systemd:
+    name: containerd
+    state: restarted
+    enabled: yes
+    daemon-reload: yes
+
+- name: Adding yum repository https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+  yum_repository:
+    name: kubernetes
+    description: Install Kubernetes (kubeadm, kubelet and kubectl)
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    enabled: yes
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+- name: Installing Kubernetes Cluster Packages.
+  yum:
+    name:
+      - kubeadm
+      - kubectl
+      - kubelet
+    state: present
+  notify: 
+      - 'enable kubelet'
+
+- name: Fetch Helm Chart Manager for Kubernetes 
+  get_url: 
+    url: https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 
+    dest: /tmp/helm.sh
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+
+- name: Installing Helm...
+  become_user: "{{ kubernetes_user }}"
+  shell: /tmp/helm.sh
+
+  
