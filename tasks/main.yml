@@ -1,0 +1,9 @@
+## Kubernetes role
+---
+
+include: configureSystem.yml
+include: install.yml
+include: configure.yml
+include: init.yml
+include: start.yml
+
