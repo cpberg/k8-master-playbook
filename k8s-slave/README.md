@@ -1,10 +1,7 @@
-Kubernetes 
+k8s-slave
 =========
 
-Installs  - Kubernetes Stack (kubeadm,kubectl,kubelet)
-          - Containerd
-          - Helm3 
-      
+     Connects k8s-slave servers to k8s-master  
 
 Requirements
 ------------
@@ -26,9 +23,9 @@ Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: k8-masters
+    - hosts: k8s-slaves
       roles:
-     - { role: kubernetes }
+     - { role: kubernetes/k8s-slave }
 
 License
 -------

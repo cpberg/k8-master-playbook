@@ -38,19 +38,4 @@
       - kubectl
       - kubelet
     state: present
-  notify: 
-      - 'enable kubelet'
 
-- name: Fetch Helm Chart Manager for Kubernetes 
-  get_url: 
-    url: https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 
-    dest: /tmp/helm.sh
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: 0755
-
-- name: Installing Helm...
-  become_user: "{{ kubernetes_user }}"
-  shell: /tmp/helm.sh
-
-  
