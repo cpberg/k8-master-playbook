@@ -9,7 +9,7 @@
   tags: install 
 
 - name: post_install
-  include: post_install 
+  include: post_install.yml 
   tags: post_install 
 
 - name: init

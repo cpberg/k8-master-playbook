@@ -38,4 +38,12 @@
       - kubectl
       - kubelet
     state: present
+  
+ 
+- name: start kubelet
+  systemd:
+    name: kubelet
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
 

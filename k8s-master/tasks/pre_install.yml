@@ -1,5 +1,40 @@
 ---
 
+- name: Make sure we have a "{{k8s_user.group }}" group
+  group:
+    name: "{{ k8s_user.group }}"
+    state: present
+
+- name: Allow "{{ k8s_user.group }}" to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^%{{ k8s_user.group }}"
+    line: "%{{ k8s_user.group }} ALL=(ALL) NOPASSWD: ALL"
+    validate: 'visudo -cf %s'
+
+- name: "Create user {{k8s_user.name }} and add to {{ k8s_user.group }} group"
+  user:
+    name="{{ k8s_user.name }}"
+    groups="{{k8s_user.group }}"
+    append=yes
+    state=present
+    createhome=yes
+
+  # Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+- name: Pass bridged IPv4 traffic to iptable's chains
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Ensure br_netfilter module is loaded for kubernetes traffic 
+  modprobe: 
+    name: br_netfilter
+    state: present
+
 - name: Remove swapfile from /etc/fstab
   mount:
     name: "{{ item }}"

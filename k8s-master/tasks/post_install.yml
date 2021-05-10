@@ -2,20 +2,17 @@
 
 - name: "Configure node ip - {{ node_ip }}" 
   lineinfile:
-    path: /etc/default/kubelet
+    path: /etc/sysconfig/kubelet
     line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }} 
   notify: 
-      - 'enable kubelet'
       - 'restart kubelet'
 
 - name: Fetch Helm Chart Manager for Kubernetes 
   get_url: 
     url: https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 
     dest: /tmp/helm.sh
-    owner: "{{ k8s_user }}"
-    group: "{{ k8s_user }}"
     mode: 0755
 
 - name: Installing Helm...
-  become_user: "{{ k8s_user }}"
+  become: false #interactive login shell required for helm.sh 
   shell: /tmp/helm.sh
