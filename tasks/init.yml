@@ -11,8 +11,8 @@
 
 - name: Installing Kubeconfig Template
   template:
-    src: "{{ k8s_config }}"
-    dest: ".kube/"
+    src: "{{ k8s_config }}.j2"
+    dest: ".kube/{{ k8s_config }}"
 
 - name: Reset Kubernetes component
   shell: "kubeadm reset --force"
