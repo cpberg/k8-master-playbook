@@ -27,7 +27,6 @@
 - name: Setup kubeconfig for user "{{k8s_user.name }}"
   command: "{{ item }}"
   with_items:
-    - mkdir -p /home/"{{k8s_user.name }}"/.kube
     - cp -i "{{ kubeadmin_config }}" /home/"{{k8s_user.name }}"/.kube/config
     - chown "{{k8s_user.name }}":"{{k8s_user.name }}" /home/"{{k8s_user.name }}"/.kube/config
 
