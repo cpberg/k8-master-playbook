@@ -3,6 +3,7 @@
   file:
     path: /home/"{{k8s_user.name }}"/.kube
     state: directory
+    mode: '0644'
 
 - name: Installing Reccomended Master Configuration
   become_user: "{{ k8s_user.name }}" 
