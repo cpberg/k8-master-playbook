@@ -8,7 +8,7 @@
 - name: Copy admin.conf to Home directory
   copy:
     src: "{{ kubeadmin_config }}"
-    dest: "/home/{{ k8s_user.name }}/.kube/config"
+    dest: "/home/{{ k8s_user.name }}/.kube"
     owner: "{{ k8s_user.name }}"
     group: "{{ k8s_user.group }}"
     mode: 0755
@@ -17,14 +17,14 @@
 - name: Installing Reccomended Master Configuration
   get_url: 
     url: https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
-    dest: "/home/{{ k8s_user.name }}/.kube/config"
+    dest: "/home/{{ k8s_user.name }}/.kube/"
     owner: "{{ k8s_user.name }}"
     group: "{{ k8s_user.group }}"
 
 - name: Installing Kubeconfig Template
   template:
     src: "{{ k8s_config }}"
-    dest: "/home/{{ k8s_user.name }}/.kube/config"
+    dest: "/home/{{ k8s_user.name }}/.kube/"
     owner: "{{ k8s_user.name }}"
     group: "{{ k8s_user.group }}"
 
