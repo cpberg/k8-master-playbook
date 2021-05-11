@@ -20,12 +20,16 @@
 - name: Initialize the Kubernetes cluster using kubeadm
   command: kubeadm init --apiserver-advertise-address="{{ k8s_node_ip }}" --apiserver-cert-extra-sans="{{ k8s_node_ip }}"  --node-name k8s-master --pod-network-cidr="{{k8s_cidr }}"
 
-- name: Copy admin.conf to Home directory
-  copy:
-    src: "{{ kubeadmin_config }}"
-    dest: ".kube"
-    mode: 0755
-    remote_src: true
+- name: Setup kubeconfig for user "{{k8s_user.name }}"
+  command: "{{ item }}"
+    with_items:
+      - mkdir -p /home/"{{k8s_user.name }}"/.kube
+      - cp -i "{{ kubeadmin_config }}" /home/"{{k8s_user.name }}"/.kube/config
+      - chown "{{k8s_user.name }}":"{{k8s_user.name }}" /home/"{{k8s_user.name }}"/.kube/config
+
+- name: Install calico pod network
+  become_user: "{{k8s_user.name" }}
+  command: kubectl create -f https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml 
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
