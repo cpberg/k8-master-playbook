@@ -5,11 +5,13 @@
     state: directory
 
 - name: Installing Reccomended Master Configuration
-  get_url: 
+  become_user: "{{ k8s_user.name }}" 
+  get_url:
     url: https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
     dest: ".kube/"
 
 - name: Installing Kubeconfig Template
+  become_user: "{{ k8s_user.name }}" 
   template:
     src: "{{ k8s_config }}.j2"
     dest: ".kube/{{ k8s_config }}"
