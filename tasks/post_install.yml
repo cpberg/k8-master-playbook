@@ -16,10 +16,3 @@
 - name: Installing Helm...
   become: false #interactive login shell required for helm.sh 
   shell: /tmp/helm.sh
-
-- name: Create Kubernetes config directory
-  file:
-    path: "/home/{{ k8s_user.name }}/.kube/"
-    state: directory
-    owner: "{{ k8s_user.name }}"
-    group: "{{ k8s_user.group }}"

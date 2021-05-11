@@ -14,6 +14,5 @@
 
 - name: init
   include: init.yml
-  become_user: "{{ k8s_user.name }}"
   tags: init 
 
