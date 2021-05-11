@@ -6,17 +6,18 @@
     mode: '0644'
 
 - name: Installing Reccomended Master Configuration
-  become_user: "{{ k8s_user.name }}" 
   get_url:
     url: https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
     dest: /home/"{{k8s_user.name }}"/.kube
-
+    owner: "{{k8s_user.name }}"
+    group: "{{k8s_user.group }}"
 
 - name: Installing Kubeconfig Template
-  become_user: "{{ k8s_user.name }}" 
   template:
     src: "{{ k8s_config }}.j2"
     dest: /home/"{{k8s_user.name }}"/.kube/{{ k8s_config }}
+    owner: "{{k8s_user.name }}"
+    group: "{{k8s_user.group }}"
 
 - name: Reset Kubernetes component
   shell: "kubeadm reset --force"
