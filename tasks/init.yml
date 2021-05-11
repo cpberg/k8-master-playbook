@@ -4,13 +4,6 @@
     path: ".kube/"
     state: directory
 
-- name: Copy admin.conf to Home directory
-  copy:
-    src: "{{ kubeadmin_config }}"
-    dest: ".kube"
-    mode: 0755
-    remote_src: true
-
 - name: Installing Reccomended Master Configuration
   get_url: 
     url: https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
@@ -26,6 +19,13 @@
 
 - name: Initialize the Kubernetes cluster using kubeadm
   command: kubeadm init --apiserver-advertise-address="{{ k8s_node_ip }}" --apiserver-cert-extra-sans="{{ k8s_node_ip }}"  --node-name k8s-master --pod-network-cidr="{{k8s_cidr }}"
+
+- name: Copy admin.conf to Home directory
+  copy:
+    src: "{{ kubeadmin_config }}"
+    dest: ".kube"
+    mode: 0755
+    remote_src: true
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
