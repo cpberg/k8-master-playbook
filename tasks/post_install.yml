@@ -16,3 +16,9 @@
 - name: Installing Helm...
   become: false #interactive login shell required for helm.sh 
   shell: /tmp/helm.sh
+
+- name: Create a symbolic link to helm is /usr/bin/
+  file:
+  src: /usr/local/bin/helm
+  dest: /usr/bin/helm
+  state: link
