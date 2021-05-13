@@ -15,7 +15,7 @@
 
 - name: "Create user {{k8s_user.name }} and add to {{ k8s_user.group }} group"
   user:
-    name="{{ k8s_user.name }}"
+    name= "{{ k8s_user.name }}"
     groups="{{k8s_user.group }}"
     append=yes
     state=present

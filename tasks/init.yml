@@ -1,48 +1,47 @@
 ---
 - name: Create Kubernetes config directory
   file:
-    path: .kube
+    path: "/home/{{ k8s_user.name }}/.kube"
     state: directory
-    mode: '0644'
+    owner: "{{ k8s_user.name }}"
+    group: "{{ k8s_user.group }}"
 
 - name: Installing Reccomended Master Configuration
   get_url:
     url: https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
-    dest: .kube
+    dest: "/home/{{ k8s_user.name }}/.kube"
+    owner: "{{ k8s_user.name }}"
+    group: "{{ k8s_user.group }}"
 
 - name: Installing Kubeconfig Template
   template:
     src: "{{ k8s_config }}.j2"
-    dest: ".kube/{{ k8s_config }}"
+    dest: "/home/{{ k8s_user.name }}/.kube/{{ k8s_config }}"
+    owner: {{ k8s_user.name }}
+    group: {{ k8s_user.group }}
 
 - name: Reset Kubernetes component
   shell: "kubeadm reset --force"
 
 - name: Initialize the Kubernetes cluster using kubeadm
-  command: kubeadm init --apiserver-advertise-address="{{ k8s_node_ip }}" --apiserver-cert-extra-sans="{{ k8s_node_ip }}"  --node-name k8s-master --pod-network-cidr="{{k8s_cidr }}"
+  command: "kubeadm init --apiserver-advertise-address={{ k8s_node_ip }} --apiserver-cert-extra-sans={{ k8s_node_ip }}  --node-name k8s-master --pod-network-cidr={{k8s_cidr }}"
 
 - name: Setup kubeconfig
   copy:
     src: "{{ kubeadmin_config }}" 
-    dest: .kube/admin.conf
-    mode: '0644'
+    dest: "/home/{{ k8s_user.name }}/.kube/admin.conf "
+    owner: "{{ k8s_user.name }}"
+    group: "{{ k8s_user.group }}"
     remote_src: yes
 
 - name: Deploy kubernetes dashboard into cluster
-  command: "kubectl --kubeconfig={{ kubeadmin_config }} apply -f .kube/recommended.yaml" 
+  become_user: "{{ k8s_user.name }}"
+  command: "kubectl --kubeconfig=.kube/admin.conf apply -f .kube/recommended.yaml" 
   register: create_result
   until: create_result.rc == 0
   retries: 5
   delay: 2
   ignore_errors: true
-
-- name: Install calico pod network
-  become_user: "{{k8s_user.name }}"
-  community.kubernetes.helm:
-    name: test
-    chart_ref: stable/calico
-    release_namespace: monitoring
-    create_namespace: 
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
