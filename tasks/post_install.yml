@@ -19,6 +19,6 @@
 
 - name: Create a symbolic link to helm is /usr/bin/
   file:
-  src: /usr/local/bin/helm
-  dest: /usr/bin/helm
-  state: link
+    src: /usr/local/bin/helm
+    dest: /usr/bin/helm
+    state: link
