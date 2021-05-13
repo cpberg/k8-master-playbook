@@ -1,11 +1,11 @@
 ---
 
-- name: Make sure we have a "{{k8s_user.group }}" group
+- name: "Make sure we have a {{k8s_user.group }} group"
   group:
     name: "{{ k8s_user.group }}"
     state: present
 
-- name: Allow "{{ k8s_user.group }}" to have passwordless sudo
+- name: "Allow {{ k8s_user.group }} to have passwordless sudo"
   lineinfile:
     dest: /etc/sudoers
     state: present
@@ -13,9 +13,9 @@
     line: "%{{ k8s_user.group }} ALL=(ALL) NOPASSWD: ALL"
     validate: 'visudo -cf %s'
 
-- name: "Create user {{k8s_user.name }} and add to {{ k8s_user.group }} group"
+- name: "Create user {{ k8s_user.name }} and add to {{ k8s_user.group }} group"
   user:
-    name= "{{ k8s_user.name }}"
+    name="{{ k8s_user.name }}"
     groups="{{k8s_user.group }}"
     append=yes
     state=present

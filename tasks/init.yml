@@ -17,8 +17,8 @@
   template:
     src: "{{ k8s_config }}.j2"
     dest: "/home/{{ k8s_user.name }}/.kube/{{ k8s_config }}"
-    owner: {{ k8s_user.name }}
-    group: {{ k8s_user.group }}
+    owner: "{{ k8s_user.name }}"
+    group: "{{ k8s_user.group }}"
 
 - name: Reset Kubernetes component
   shell: "kubeadm reset --force"
@@ -49,5 +49,5 @@
 
 - name: Copy join command to local file
   become: false
-  local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
+  local_action: "copy content={{ join_command.stdout_lines[0] }} dest=./join-command"
 
