@@ -28,7 +28,7 @@
 - name: Setup kubeconfig for user "{{k8s_user.name }}"
   copy:
     src: "{{ kubeadmin_config }}" 
-    dest: /.kube/config
+    dest: .kube/config
     owner: "{{k8s_user.name }}" 
     group: "{{k8s_user.group }}" 
     mode: '0644'
