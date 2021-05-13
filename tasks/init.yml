@@ -1,23 +1,19 @@
 ---
 - name: Create Kubernetes config directory
   file:
-    path: /home/"{{k8s_user.name }}"/.kube
+    path: .kube
     state: directory
     mode: '0644'
 
 - name: Installing Reccomended Master Configuration
   get_url:
     url: https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
-    dest: /home/"{{k8s_user.name }}"/.kube
-    owner: "{{k8s_user.name }}"
-    group: "{{k8s_user.group }}"
+    dest: .kube
 
 - name: Installing Kubeconfig Template
   template:
     src: "{{ k8s_config }}.j2"
-    dest: /home/"{{k8s_user.name }}"/.kube/{{ k8s_config }}
-    owner: "{{k8s_user.name }}"
-    group: "{{k8s_user.group }}"
+    dest: ".kube/{{ k8s_config }}"
 
 - name: Reset Kubernetes component
   shell: "kubeadm reset --force"
@@ -25,17 +21,15 @@
 - name: Initialize the Kubernetes cluster using kubeadm
   command: kubeadm init --apiserver-advertise-address="{{ k8s_node_ip }}" --apiserver-cert-extra-sans="{{ k8s_node_ip }}"  --node-name k8s-master --pod-network-cidr="{{k8s_cidr }}"
 
-- name: Setup kubeconfig for user "{{k8s_user.name }}"
+- name: Setup kubeconfig
   copy:
     src: "{{ kubeadmin_config }}" 
-    dest: .kube/config
-    owner: "{{k8s_user.name }}" 
-    group: "{{k8s_user.group }}" 
+    dest: .kube/admin.conf
     mode: '0644'
     remote_src: yes
 
 - name: Deploy kubernetes dashboard into cluster
-  command: "kubectl --kubeconfig={{ kubeadmin_config }}" 
+  command: "kubectl --kubeconfig={{ kubeadmin_config }} apply -f .kube/recommended.yaml" 
   register: create_result
   until: create_result.rc == 0
   retries: 5
