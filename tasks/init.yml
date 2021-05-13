@@ -35,7 +35,6 @@
     remote_src: yes
 
 - name: Deploy kubernetes dashboard into cluster
-  when: init_cluster is succeeded and enable_dashboard
   command: "kubectl --kubeconfig={{ kubeadmin_config }}" 
   register: create_result
   until: create_result.rc == 0
