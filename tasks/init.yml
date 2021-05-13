@@ -26,10 +26,13 @@
   command: kubeadm init --apiserver-advertise-address="{{ k8s_node_ip }}" --apiserver-cert-extra-sans="{{ k8s_node_ip }}"  --node-name k8s-master --pod-network-cidr="{{k8s_cidr }}"
 
 - name: Setup kubeconfig for user "{{k8s_user.name }}"
-  command: "{{ item }}"
-  with_items:
-    - cp -i "{{ kubeadmin_config }}" /home/"{{k8s_user.name }}"/.kube/config
-    - chown "{{k8s_user.name }}":"{{k8s_user.name }}" /home/"{{k8s_user.name }}"/.kube/config
+  copy:
+    src: "{{ kubeadmin_config }}" 
+    dest: /.kube/config
+    owner: "{{k8s_user.name }}" 
+    group: "{{k8s_user.group }}" 
+    mode: '0644'
+    remote_src: yes
 
 - name: Install calico pod network
   become_user: "{{k8s_user.name }}"
