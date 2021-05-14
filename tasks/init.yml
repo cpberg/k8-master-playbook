@@ -41,7 +41,7 @@
   until: create_result.rc == 0
   retries: 5
   delay: 2
-  ignore_errors: true
+  ignore_errors: false
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
