@@ -29,7 +29,7 @@
 - name: Setup kubeconfig
   copy:
     src: "{{ kubeadmin_config }}" 
-    dest: "/home/{{ k8s_user.name }}/.kube/admin.conf "
+    dest: "/home/{{ k8s_user.name }}/.kube/admin.conf"
     owner: "{{ k8s_user.name }}"
     group: "{{ k8s_user.group }}"
     remote_src: yes
