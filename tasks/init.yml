@@ -36,7 +36,7 @@
 
 - name: Deploy kubernetes dashboard into cluster
   become_user: "{{ k8s_user.name }}"
-  command: "kubectl --kubeconfig=/home/{{ k8s_user.name }}/.kube/admin.conf apply -f /home/{{ k8s_user.name }}/.kube/recommended.yaml" 
+  command: "kubectl --kubeconfig=/home/{{ k8s_user.name }}/.kube/config apply -f /home/{{ k8s_user.name }}/.kube/recommended.yaml" 
   register: create_result
   until: create_result.rc == 0
   retries: 5
