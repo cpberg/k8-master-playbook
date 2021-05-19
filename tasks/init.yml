@@ -21,9 +21,11 @@
     group: "{{ k8s_user.group }}"
 
 - name: Reset Kubernetes component
+  become_user: "{{ k8s_user.name }}"
   shell: "kubeadm reset --force"
 
 - name: Initialize the Kubernetes cluster using kubeadm
+  become_user: "{{ k8s_user.name }}"
   command: "kubeadm init --apiserver-advertise-address={{ k8s_node_ip }} --apiserver-cert-extra-sans={{ k8s_node_ip }}  --node-name k8s-master --pod-network-cidr={{k8s_cidr }}"
 
 - name: Setup kubeconfig
