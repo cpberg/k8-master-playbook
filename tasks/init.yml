@@ -21,7 +21,6 @@
     group: "{{ k8s_user.group }}"
 
 - name: Reset Kubernetes component
-  become_user: "{{ k8s_user.name }}"
   shell: "kubeadm reset --force"
 
 - name: Initialize the Kubernetes cluster using kubeadm
