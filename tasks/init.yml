@@ -44,9 +44,6 @@
   delay: 2
   ignore_errors: false
 
-- name: Deploy kubernetes dashboard into cluster
-  become_user: "{{ k8s_user.name }}"
-  command: "kubectl --kubeconfig=/home/{{ k8s_user.name }}/.kube/config  apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml"
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
