@@ -44,6 +44,9 @@
   delay: 2
   ignore_errors: false
 
+- name: Install calico pod network
+  become_user: "{{ k8s_user.name }}"
+  command: kubectl create -f https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
