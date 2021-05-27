@@ -45,11 +45,13 @@
   ignore_errors: false
 
 - name: Add openstack calico chart repo
+  become_user: "{{ k8s_user.name }}"
   community.kubernetes.helm_repository:
     name: openstack-helm
     repo_url: https://registry.thecore.net.au/chartrepo/openstack
 
 - name: Deploy latest version of calico chart inside calico-system namespace
+  become_user: "{{ k8s_user.name }}"
   community.kubernetes.helm:
     name: calico
     chart_ref: openstack-helm/calico
