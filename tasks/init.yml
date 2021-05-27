@@ -55,6 +55,7 @@
   community.kubernetes.helm:
     name: calico
     chart_ref: openstack-helm/calico
+    chart_version: 0.1.1
     release_namespace: calico-system
     create_namespace: yes
 
