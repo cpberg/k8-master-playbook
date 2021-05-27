@@ -50,7 +50,6 @@
     chart_ref: https://github.com/projectcalico/calico/releases/download/v3.19.1/tigera-operator-v3.19.1-1.tgz
     release_namespace: calico-system
     create_namespace: yes
-    update_repo_cache: yes
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
