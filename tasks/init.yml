@@ -44,10 +44,15 @@
   delay: 2
   ignore_errors: false
 
-- name: HELM | Installing calico pod network
+- name: Add openstack calico chart repo
+  community.kubernetes.helm_repository:
+    name: openstack-helm
+    repo_url: https://registry.thecore.net.au/chartrepo/openstack
+
+- name: Deploy latest version of calico chart inside calico-system namespace
   community.kubernetes.helm:
-    name: 
-    chart_ref: https://github.com/projectcalico/calico/releases/download/v3.19.1/tigera-operator-v3.19.1-1.tgz
+    name: calico
+    chart_ref: openstack-helm/calico
     release_namespace: calico-system
     create_namespace: yes
 
