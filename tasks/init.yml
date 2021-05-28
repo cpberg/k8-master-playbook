@@ -47,9 +47,6 @@
     release_namespace: calico-system
     create_namespace: yes
 
-- name: proxy kubernetes dashboard 
-  command: "kubectl proxy"
-
 - name: Expose Dashboard UI
   become_user: "{{ k8s_user.name }}"
   shell: "kubectl proxy --port=8001" 
