@@ -47,6 +47,13 @@
     release_namespace: calico-system
     create_namespace: yes
 
+- name: Deploy latest version of Traefik Ingress Controller chart inside kube-system namespace
+  become_user: "{{ k8s_user.name }}"
+  community.kubernetes.helm:
+    name: traefik
+    chart_ref: 
+    release_namespace: kube-system
+
 - name: Expose Dashboard UI
   become_user: "{{ k8s_user.name }}"
   shell: "kubectl proxy --port=8001" 
