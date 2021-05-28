@@ -53,8 +53,8 @@
   args:
     chdir: /tmp
     creates: dashboard_started.txt
-    async: 10
-    poll: 0
+  async: 10
+  poll: 0
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
