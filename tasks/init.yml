@@ -44,11 +44,6 @@
   delay: 2
   ignore_errors: false
 
-- name: Download the calico tigera helm chart 
-  get_url:
-    url: https://github.com/projectcalico/calico/releases/download/v3.19.1/tigera-operator-v3.19.1-1.tgz
-    dest: /tmp    
-    
 - name: Deploy latest version of calico chart inside calico-system namespace
   become_user: "{{ k8s_user.name }}"
   community.kubernetes.helm:
@@ -56,6 +51,10 @@
     chart_ref: https://github.com/projectcalico/calico/releases/download/v3.19.1/tigera-operator-v3.19.1-1.tgz
     release_namespace: calico-system
     create_namespace: yes
+
+- name: proxy kubernetes dashboard 
+  become_user: "{{ k8s_user.name }}"
+  command: "kubectl proxy"
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
