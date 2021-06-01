@@ -1,0 +1,21 @@
+---
+
+- name: HELM - Add ingress-nginx chart repo
+  become_user: "{{ k8s_user.name }}"
+  community.kubernetes.helm_repository:
+    name: ingress-nginx
+    repo_url: "https://kubernetes.github.io/ingress-nginx"
+
+- name: HELM - Deploy latest version of Nginx chart inside monitoring namespace
+  become_user: "{{ k8s_user.name }}"
+  community.kubernetes.helm:
+    name: nginx
+    chart_ref: ingress-nginx/ingress-nginx
+    release_namespace: monitoring
+    create_namespace: true
+
+- name: Load kubernetes dashboard ingress 
+  become_user: "{{ k8s_user.name }}"
+  file:
+    src: kubernetes_dashboard_ingress.yaml
+    dest: /home/{{ k8s_user.name }}/.kube/kubernetes_dashboard_ingress.yaml

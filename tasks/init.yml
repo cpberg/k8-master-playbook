@@ -24,8 +24,7 @@
   shell: "kubeadm reset --force"
 
 - name: Initialize the Kubernetes cluster using kubeadm
-  become_user: "{{ k8s_user.name }}"
-  command: "sudo kubeadm init --apiserver-advertise-address={{ k8s_node_ip }} --apiserver-cert-extra-sans={{ k8s_node_ip }}  --node-name k8s-master --pod-network-cidr={{k8s_cidr }}"
+  command: "kubeadm init --apiserver-advertise-address={{ k8s_node_ip }} --apiserver-cert-extra-sans={{ k8s_node_ip }}  --node-name k8s-master --pod-network-cidr={{k8s_cidr }}"
 
 - name: Setup kubeconfig
   copy:
@@ -39,37 +38,13 @@
   become_user: "{{ k8s_user.name }}"
   command: "kubectl --kubeconfig=/home/{{ k8s_user.name }}/.kube/config apply -f /home/{{ k8s_user.name }}/.kube/recommended.yaml" 
 
-- name: Deploy latest version of calico chart inside calico-system namespace
+- name: HELM - Deploy latest version of calico chart inside calico-system namespace
   become_user: "{{ k8s_user.name }}"
   community.kubernetes.helm:
     name: calico
     chart_ref: https://github.com/projectcalico/calico/releases/download/v3.19.1/tigera-operator-v3.19.1-1.tgz
     release_namespace: calico-system
     create_namespace: yes
-
-- name: Add ingress-nginx chart repo
-  become_user: "{{ k8s_user.name }}"
-  community.kubernetes.helm_repository:
-    name: ingress-nginx
-    repo_url: "https://kubernetes.github.io/ingress-nginx"
-
-- name: HELM - Deploy latest version of Nginx chart inside monitoring namespace with values
-  become_user: "{{ k8s_user.name }}"
-  community.kubernetes.helm:
-    name: nginx
-    chart_ref: ingress-nginx/ingress-nginx
-    release_namespace: monitoring
-    create_namespace: true
-
-- name: Load kubernetes dashboard ingress 
-  become_user: "{{ k8s_user.name }}"
-  file:
-    src: kubernetes_dashboard_ingress.yaml
-    dest: /home/{{ k8s_user.name }}/.kube/kubernetes_dashboard_ingress.yaml
-
-- name: Load kubernetes dashboard ingress 
-  become_user: "{{ k8s_user.name }}"
-  command: "kubectl apply -f /home/{{ k8s_user.name }}/.kube/kubernetes_dashboard_ingress.yaml" 
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
