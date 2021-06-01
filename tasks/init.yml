@@ -47,21 +47,23 @@
     release_namespace: calico-system
     create_namespace: yes
 
-- name: Deploy latest version of Traefik Ingress Controller chart inside kube-system namespace
+- name: Deploy latest version of Nginx Ingress Controller chart inside kube-system namespace
   become_user: "{{ k8s_user.name }}"
   community.kubernetes.helm:
-    name: traefik
-    chart_ref: 
+    name: ingress-nginx/ingress-nginx
+    chart_ref: https://kubernetes.github.io/ingress-nginx
     release_namespace: kube-system
 
-- name: Expose Dashboard UI
+- name: Load kubernetes dashboard ingress 
   become_user: "{{ k8s_user.name }}"
-  shell: "kubectl proxy --port=8001" 
-  args:
-    chdir: /tmp
-    creates: dashboard_started.txt
-  async: 10
-  poll: 0
+  file:
+    src: kubernetes_dashboard_ingress.yaml
+    dest: /home/{{ k8s_user.name }}/.kube/kubernetes_dashboard_ingress.yaml
+
+- name: Load kubernetes dashboard ingress 
+  become_user: "{{ k8s_user.name }}"
+  command: "kubectl apply -f /home/{{ k8s_user.name }}/.kube/kubernetes_dashboard_ingress.yaml" 
+  
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
