@@ -57,7 +57,7 @@
   become_user: "{{ k8s_user.name }}"
   community.kubernetes.helm:
     name: nginx
-    chart_ref: ingress-nginx/incress-nginx
+    chart_ref: ingress-nginx/ingress-nginx
     release_namespace: monitoring
     create_namespace: true
 
