@@ -60,16 +60,6 @@
     chart_ref: ingress-nginx/ingress-nginx
     release_namespace: monitoring
     create_namespace: true
-  async: 1000
-  poll: 0
-  register: helm_sleeper
-
-- name: 'HELM - check on async task'
-  async_status:
-    jid: "{{ helm_sleeper.ansible_job_id }}"
-  register: job_result
-  until: job_result.finished
-  retries: 30
 
 - name: Load kubernetes dashboard ingress 
   become_user: "{{ k8s_user.name }}"
