@@ -50,7 +50,7 @@
 - name: Deploy latest version of Nginx Ingress Controller chart inside kube-system namespace
   become_user: "{{ k8s_user.name }}"
   community.kubernetes.helm:
-    name: ingress-nginx/ingress-nginx
+    name: stable
     chart_ref: https://kubernetes.github.io/ingress-nginx
     release_namespace: kube-system
 
@@ -64,7 +64,6 @@
   become_user: "{{ k8s_user.name }}"
   command: "kubectl apply -f /home/{{ k8s_user.name }}/.kube/kubernetes_dashboard_ingress.yaml" 
   
-
 - name: Generate join command
   command: kubeadm token create --print-join-command
   register: join_command
