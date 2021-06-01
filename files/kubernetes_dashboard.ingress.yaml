@@ -5,13 +5,13 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    name: dashboard
-    namespace: monitoring
-    spec:
-      rules:
-        - http:
-            paths:
-              - backend:
-                serviceName: kubernetes-dashboard
-                servicePort: 443
-                path: /
+  name: dashboard
+  namespace: monitoring
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              serviceName: kubernetes-dashboard
+              servicePort: 443
+            path: /
