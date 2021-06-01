@@ -67,9 +67,9 @@
 - name: 'HELM - check on async task'
   async_status:
     jid: "{{ helm_sleeper.ansible_job_id }}"
-    register: job_result
-    until: job_result.finished
-    retries: 30
+  register: job_result
+  until: job_result.finished
+  retries: 30
 
 - name: Load kubernetes dashboard ingress 
   become_user: "{{ k8s_user.name }}"
