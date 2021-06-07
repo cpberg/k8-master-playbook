@@ -1,9 +1,9 @@
 ---
 
-- name: "Configure node ip - {{ node_ip }}" 
+- name: "Configure kubernetes node ip - {{ k8s_node_ip }}" 
   lineinfile:
     path: /etc/sysconfig/kubelet
-    line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }} 
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ k8s_node_ip }} 
   notify: 
       - 'restart kubelet'
 
