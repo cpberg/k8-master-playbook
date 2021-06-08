@@ -7,7 +7,7 @@ k8s_user:
 
 
 k8s_node_ip: 192.168.50.10
-k8s_cidr: 192.168.0.0/16 
+k8s_cidr: 10.10.0.0/16
 k8s_config: default.conf
 
 
